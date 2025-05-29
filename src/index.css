@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Inter Tight', 'Noto Sans Bengali', sans-serif;
+  font-weight: 300;
+}
+
+pre {
+  font-family: 'sf Mono', monospace;
+  font-weight: 300;
+  font-size: 12px;
+}
