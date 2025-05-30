@@ -1,9 +1,9 @@
-import CreatePostPage from "./pages/create-post"
+import Test from "./Test"
 
 function App() {
   return (
     <div>
-      <CreatePostPage />
+      <Test />
     </div>
   )
 }
