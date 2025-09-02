@@ -6,6 +6,19 @@ export type POST_STATUS = "QUEUED" | "SENT" | "DRAFT" | "FAILED"
 
 export type POST_VISIBILITY = "PUBLIC" | "PRIVATE" | "UNLISTED"
 
+// export type POST_ON =
+//   | "FACEBOOK"
+//   | "INSTAGRAM"
+//   | "LINKEDIN"
+//   | "PINTEREST"
+//   | "TIKTOK"
+//   | "YOUTUBE"
+//   | "GMB"
+//   | "TWITTER"
+//   | "TUMBLR"
+//   | "REDDIT"
+//   | "SNAPCHAT"
+
 export type POST_ON =
   | "FACEBOOK"
   | "INSTAGRAM"
@@ -16,8 +29,6 @@ export type POST_ON =
   | "GMB"
   | "TWITTER"
   | "TUMBLR"
-  | "REDDIT"
-  | "SNAPCHAT"
 
 export const SCHEDULE_TYPE_CONSTANT: {
   CUSTOM: "CUSTOM"
@@ -85,29 +96,4 @@ export const POST_ON_CONSTANT: {
   GMB: "GMB",
   TWITTER: "TWITTER",
   TUMBLR: "TUMBLR",
-}
-
-export const YOUTUBE_POST_AS_CONSTANT: {
-  SHORTS: "SHORTS"
-  VIDEO: "VIDEO"
-} = {
-  SHORTS: "SHORTS",
-  VIDEO: "VIDEO",
-}
-export const FACEBOOK_POST_AS_CONSTANT: {
-  REELS: "REELS"
-  POST: "POST"
-} = {
-  REELS: "REELS",
-  POST: "POST",
-}
-
-export const YOUTUBE_VISIBILITY_CONSTANT: {
-  PUBLIC: "PUBLIC"
-  PRIVATE: "PRIVATE"
-  UNLISTED: "UNLISTED"
-} = {
-  PUBLIC: "PUBLIC",
-  PRIVATE: "PRIVATE",
-  UNLISTED: "UNLISTED",
 }

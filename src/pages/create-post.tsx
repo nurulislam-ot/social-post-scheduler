@@ -1,4 +1,4 @@
-import Form from "../components/create-update/form"
+import FormBody from "../components/create-update/form"
 import {
   initialFormOptions,
   useAppForm,
@@ -24,7 +24,7 @@ export default function CreatePostPage() {
     >
       <div className='col-span-3 border-b border-gray-100'></div>
       <PlatformSelectorSidebar form={form} />
-      <Form />
+      <FormBody form={form} />
       <div></div>
     </form>
   )

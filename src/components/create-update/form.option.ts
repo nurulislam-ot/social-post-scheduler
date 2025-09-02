@@ -1,29 +1,12 @@
-import {
-  createFormHook,
-  formOptions,
-  type FormAsyncValidateOrFn,
-  type FormOptions,
-  type FormValidateFn,
-} from "@tanstack/react-form"
-import type { CreateUpdatePostType } from "../../schema/create-update-post"
-import { SCHEDULE_TYPE_CONSTANT } from "../../types/post"
-import { fieldContext, formContext } from "../../context/form"
+import { createFormHook, formOptions } from "@tanstack/react-form"
+import { fieldContext, formContext } from "@/context/form"
+import { SCHEDULE_TYPE_CONSTANT } from "@/types/post"
 import { FormInput } from "../form-input/input"
+import { FormMultiSelect } from "../form-input/multi-select"
+import { FormTextArea } from "../form-input/textarea"
+import type { CreateUpdateForm } from "@/schema/create-update-post"
 
-export type InitialFormOption = FormOptions<
-  CreateUpdatePostType,
-  FormValidateFn<CreateUpdatePostType>,
-  FormValidateFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  FormValidateFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  FormValidateFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  CreateUpdatePostType
->
-
-const defaultValues: CreateUpdatePostType = {
+const defaultValues: CreateUpdateForm = {
   isEditMode: false,
   posts: [],
   schedule_type: SCHEDULE_TYPE_CONSTANT.INSTANT,
@@ -43,6 +26,8 @@ export const { useAppForm, withForm } = createFormHook({
 
   fieldComponents: {
     FormInput,
+    FormTextArea,
+    FormMultiSelect,
   },
   formComponents: {},
 })

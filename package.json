@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.8",
     "@gsap/react": "^2.1.2",
+    "@headlessui/react": "^2.2.4",
     "@tailwindcss/vite": "^4.1.7",
     "@tanstack/react-form": "^1.12.0",
     "clsx": "^2.1.1",

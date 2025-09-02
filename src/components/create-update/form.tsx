@@ -3,21 +3,49 @@ import gsap from "gsap"
 import { useAtomValue } from "jotai"
 import { useRef } from "react"
 import { cn } from "../../lib/cn"
-import { CreateUpdatePostSchema } from "../../schema/create-update-post"
-import { platformAtom } from "../../store/platform"
 import { FacebookForm } from "./facebook-form"
-import { initialFormOptions, useAppForm } from "./form.option"
-import { JSONPreview } from "./json-preview"
+import { platformAtom } from "../../store/platform"
+import { YouTubeForm } from "./youtube/youtube-form"
+import { initialFormOptions, withForm } from "./form.option"
+import { POST_ON_CONSTANT, type POST_ON } from "../../types/post"
+import type {
+  CreateUpdatePostForm,
+  CreateUpdateReactFormApi,
+} from "@/types/tanstack-post"
 
-export default function Form() {
+const FormBody = withForm({
+  ...initialFormOptions,
+  render: function ({ form }) {
+    return <Form form={form} />
+  },
+})
+
+type RenderFormByPlatformProps = {
+  platform: POST_ON
+  form: CreateUpdatePostForm & CreateUpdateReactFormApi
+}
+
+const RenderFormByPlatform = ({
+  platform,
+  form,
+}: RenderFormByPlatformProps) => {
+  switch (platform) {
+    case POST_ON_CONSTANT.FACEBOOK:
+      return <FacebookForm form={form} />
+    case POST_ON_CONSTANT.YOUTUBE:
+      return <YouTubeForm form={form} />
+    default:
+      return null
+  }
+}
+
+type FormProps = {
+  form: CreateUpdatePostForm & CreateUpdateReactFormApi
+}
+
+function Form({ form }: FormProps) {
   const boxRef = useRef<HTMLDivElement>(null)
   const { activePlatform } = useAtomValue(platformAtom)
-  const form = useAppForm({
-    ...initialFormOptions,
-    validators: {
-      onBlur: CreateUpdatePostSchema,
-    },
-  })
 
   useGSAP(() => {
     gsap.fromTo(boxRef.current, { y: 50, opacity: 0.2 }, { y: 0, opacity: 1 })
@@ -26,7 +54,7 @@ export default function Form() {
   return (
     <div className='bg-neutral-50'>
       <div ref={boxRef} className='w-3/5 mx-auto py-10'>
-        <FacebookForm form={form} />
+        <RenderFormByPlatform form={form} platform={activePlatform} />
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
@@ -44,9 +72,9 @@ export default function Form() {
             </button>
           )}
         />
-
-        <JSONPreview form={form} />
       </div>
     </div>
   )
 }
+
+export default FormBody

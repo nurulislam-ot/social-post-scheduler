@@ -1,33 +1,31 @@
+import FacebookIcon from "@/icons/facebook"
+import InstagramIcon from "@/icons/instagram"
+import LinkedInIcon from "@/icons/linkedin"
+import PinterestIcon from "@/icons/pinterest"
+import RedditIcon from "@/icons/reddit"
+import SnapchatIcon from "@/icons/snapchat"
+import TiktokIcon from "@/icons/tiktok"
+import TwitterIcon from "@/icons/twitter"
+import YoutubeIcon from "@/icons/youtube"
+import { cn } from "@/lib/cn"
+import { platformAtom, setActivePlatformAtom } from "@/store/platform"
+import type { POST_ON } from "@/types/post"
 import { useAtomValue, useSetAtom } from "jotai"
 import type { JSX } from "react"
-import FacebookIcon from "../../icons/facebook"
-import InstagramIcon from "../../icons/instagram"
-import LinkedInIcon from "../../icons/linkedin"
-import PinterestIcon from "../../icons/pinterest"
-import RedditIcon from "../../icons/reddit"
-import SnapchatIcon from "../../icons/snapchat"
-import TiktokIcon from "../../icons/tiktok"
-import TwitterIcon from "../../icons/twitter"
-import YoutubeIcon from "../../icons/youtube"
-import { cn } from "../../lib/cn"
-import { platformAtom, setActivePlatformAtom } from "../../store/platform"
-import type { POST_ON } from "../../types/post"
-import type {
-  FormAsyncValidateOrFn,
-  FormValidateFn,
-  ReactFormExtendedApi,
-} from "@tanstack/react-form"
-import type { CreateUpdatePostType } from "../../schema/create-update-post"
+
+import get_post_by_platform from "@/helper/get-post"
+import useFetchChannels from "@/hooks/gql/useFetchChannel"
+import type { PostField } from "@/types/tanstack-post"
 import { initialFormOptions, withForm } from "./form.option"
 
 type Platform = {
-  id: number
   name: string
   type: POST_ON
   icon: JSX.Element
+  channel_uid: string
 }
 
-const AVAILABLE_PLATFORMS: Platform[] = [
+const PLATFORMS = [
   {
     id: 1,
     name: "ফেসবুক",
@@ -84,41 +82,60 @@ const AVAILABLE_PLATFORMS: Platform[] = [
   },
 ]
 
-type Form = ReactFormExtendedApi<
-  CreateUpdatePostType,
-  FormValidateFn<CreateUpdatePostType>,
-  FormValidateFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  FormValidateFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  FormValidateFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  FormAsyncValidateOrFn<CreateUpdatePostType>,
-  CreateUpdatePostType
->
-
 type PlatformSelectorSidebarProps = {
-  form: Form
+  form: PostField
 }
 
 function PlatformSelector({ form }: PlatformSelectorSidebarProps) {
-  const { activePlatform } = useAtomValue(platformAtom)
+  const { data } = useFetchChannels()
   const setActivePlatform = useSetAtom(setActivePlatformAtom)
+  const { activePlatform } = useAtomValue(platformAtom)
 
-  const onPlatformClick = (platform: POST_ON) => {
+  const AVAILABLE_PLATFORMS = data.reduce<Platform[]>(
+    (acc, channel) => {
+      const isThisPlatformExist = acc.find(
+        (prevPlatform) => prevPlatform.type === channel.platform
+      )
+      if (isThisPlatformExist) {
+        return acc
+      }
+
+      const platform = PLATFORMS.find(
+        (platform) => platform.type === channel.platform
+      )
+      if (platform) {
+        acc.push({
+          name: platform.name,
+          icon: platform.icon,
+          type: channel.platform,
+          channel_uid: channel.uid,
+        })
+      }
+      return acc
+    },
+    [
+      {
+        name: "All channels",
+        icon: <></>,
+        type: "ALL" as POST_ON,
+        channel_uid: "",
+      },
+    ]
+  )
+
+  const onClick = (platform: POST_ON) => {
+    form.pushValue(get_post_by_platform(platform))
     setActivePlatform(platform)
-    form.setFieldValue("isEditMode", true)
-    console.log(form.getFieldValue("isEditMode"))
   }
 
   return (
     <div>
       <ul className='flex flex-col gap-2 px-3 py-5'>
         {AVAILABLE_PLATFORMS.map((platform) => (
-          <li key={platform.id}>
+          <li key={platform.channel_uid}>
             <button
               type='button'
-              onClick={() => onPlatformClick(platform.type)}
+              onClick={() => onClick(platform.type)}
               className={cn(
                 "flex gap-x-2 hover:cursor-pointer w-full items-center px-4 py-1.5 border border-gray-100 hover:border-gray-200 transition-colors rounded-2xl",
                 {
@@ -142,22 +159,13 @@ export const PlatformSelectorSidebar = withForm({
   ...initialFormOptions,
   render({ form }) {
     return (
-      <form.Field name='posts' mode='array'>
-        {(form) => {
-          const onclick = () =>
-            form.pushValue({
-              content: "",
-              media_urls: [],
-              post_on: "FACEBOOK",
-              settings: {
-                post_as: "REELS",
-              },
-              status: "DRAFT",
-              type: "TEXT",
-            })
+      <form.Field
+        name='posts'
+        mode='array'
+        children={(form: PostField) => {
           return <PlatformSelector form={form} />
         }}
-      </form.Field>
+      />
     )
   },
 })

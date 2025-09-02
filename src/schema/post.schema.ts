@@ -1,12 +1,12 @@
 import { z } from "zod"
 import {
-  FACEBOOK_POST_AS_CONSTANT,
   POST_ON_CONSTANT,
   POST_STATUS_CONSTANT,
   POST_TYPE_CONSTANT,
   POST_VISIBILITY_CONSTANT,
-  YOUTUBE_POST_AS_CONSTANT,
-} from "../types/post"
+} from "@/types/post"
+import { YOUTUBE_POST_AS_CONSTANT } from "@/constant/youtube"
+import { FACEBOOK_POST_AS_CONSTANT } from "@/constant/facebook"
 
 const DefaultPostSchema = z.object({
   uid: z.string().optional(),

@@ -1,0 +1,18 @@
+export const getCookie = (cname: string) => {
+  try {
+    const name = cname + "="
+    const ca = document.cookie.split(";")
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i]
+      while (c.charAt(0) === " ") {
+        c = c.substring(1)
+      }
+      if (c.indexOf(name) === 0) {
+        return window?.atob(c?.substring(name?.length, c.length))
+      }
+    }
+  } catch (err) {
+    console.log("Error: ", err)
+    return
+  }
+}

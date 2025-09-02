@@ -1,10 +1,12 @@
+import { ApolloProvider } from "@apollo/client"
 import CreatePostPage from "./pages/create-post"
+import { client } from "./helper/client"
 
 function App() {
   return (
-    <div>
+    <ApolloProvider client={client}>
       <CreatePostPage />
-    </div>
+    </ApolloProvider>
   )
 }
 

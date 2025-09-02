@@ -9,4 +9,6 @@ export const CreateUpdatePostSchema = z.object({
   scheduled_time: z.string().nullable(),
 })
 
-export type CreateUpdatePostType = z.infer<typeof CreateUpdatePostSchema>
+export type CreateUpdateForm = z.infer<typeof CreateUpdatePostSchema>
+export type CreateUpdatePost = CreateUpdateForm["posts"][number]
+export type CreateUpdatePostSettings = CreateUpdatePost["settings"]
